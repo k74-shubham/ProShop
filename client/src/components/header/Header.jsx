@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { AppBar, Box, Toolbar, styled, Typography } from "@mui/material";
+import { AppBar, Toolbar, Box, Typography, IconButton, Drawer, List, ListItem, styled } from '@mui/material';
+import { Menu } from '@mui/icons-material'
 
 // Component
 import Search from "./Search";
@@ -30,13 +31,19 @@ const PlusImage = styled(`img`)({
   marginLeft: 4,
 });
 
-const CustomButtonWrapper = styled(Box)`
-    margin-top: 0;
-    margin-left: 5%;
-    margin-down: 0;
-    margin-right: auto;
-    // margin: 0 5% 0 auto;
-`;
+const CustomButtonWrapper = styled('span')(({ theme }) => ({ 
+  margin: '0 5% 0 auto', 
+  [theme.breakpoints.down('md')]: {
+      display: 'none'
+  }
+}));
+
+const MenuButton = styled(IconButton)(({ theme }) => ({
+  display: 'none',
+  [theme.breakpoints.down('md')]: {
+      display: 'block'
+  }
+}));
 
 const Header = () => {
   const logoURL =
@@ -44,9 +51,36 @@ const Header = () => {
   const subURL =
     "https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/plus_aef861.png";
 
+
+    const [open, setOpen] = useState();
+    const handleOpen = () => {
+      setOpen(true);
+    }
+    const handleClose = () => {
+      setOpen(false);
+    }
+    const list = () => (
+      <Box style={{ width: 200 }} onClick={handleClose}>
+          <List>
+              <listItem button>
+                  <CustomButton />
+              </listItem>
+          </List>
+      </Box>
+    );
+
   return (
     <StyledHeader>
       <Toolbar style={{minHeight: 55}}>
+
+      <MenuButton color="inherit" onClick={handleOpen}>
+        <Menu />
+      </MenuButton>
+
+      <Drawer open={open} onClose={handleClose}>
+        {list()}
+      </Drawer>
+
         <Component to={'/'}>
           <img src={logoURL} alt="logo" style={{ width: 75 }} />
           <Box style={{ display: "flex" }}>
